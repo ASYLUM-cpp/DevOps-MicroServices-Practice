@@ -43,7 +43,8 @@ Thumbs.db
 .cache/
 
 # Package manager
-package-lock.json
+# Note: package-lock.json is now tracked for CI/CD consistency
+# package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
