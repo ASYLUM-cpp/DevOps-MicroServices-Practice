@@ -16,6 +16,13 @@ services:
       - task-service
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Auth Service
   auth-service:
@@ -24,10 +31,17 @@ services:
       - "5001:5001"
     environment:
       - PORT=5001
-      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
       - NODE_ENV=development
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Task Service
   task-service:
@@ -36,10 +50,17 @@ services:
       - "5002:5002"
     environment:
       - PORT=5002
-      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
       - NODE_ENV=development
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Frontend
   frontend:
@@ -52,6 +73,7 @@ services:
       - gateway
     networks:
       - app-network
+    restart: unless-stopped
 
 networks:
   app-network:
